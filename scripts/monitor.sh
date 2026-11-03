@@ -27,13 +27,15 @@ for WEBSITE in "${WEBSITES[@]}"; do
         --connect-timeout 10 \
         --max-time 15 "$WEBSITE")
 
-    if [[ "$HTTP_STATUS" == "200" ]]; then
+    if [[ "$HTTP_STATUS" =~ ^[23][0-9][0-9]$ ]]; then
         echo "STATUS: UP (HTTP $HTTP_STATUS)"
+
     elif [[ "$HTTP_STATUS" == "000" ]]; then
         echo "STATUS: DOWN (Connection failure or timeout)"
         FAILED=1
+
     else
-        echo "STATUS: DOWN (HTTP $HTTP_STATUS)"
+        echo "STATUS: ERROR (HTTP $HTTP_STATUS)"
         FAILED=1
     fi
 
@@ -48,7 +50,7 @@ if [[ "$FAILED" -eq 1 ]]; then
     echo "RESULT: Monitoring completed with failures."
     exit 1
 else
-    echo "RESULT: All websites are responding successfully."
+    echo "RESULT: All websites passed availability checks."
     exit 0
 fi
 ```
