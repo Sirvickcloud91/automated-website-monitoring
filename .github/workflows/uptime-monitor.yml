@@ -1,0 +1,21 @@
+name: Website Uptime Monitoring
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/5 * * * *'
+
+jobs:
+  monitor:
+    name: Check Website Availability
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install curl
+        run: sudo apt-get update && sudo apt-get install -y curl
+
+      - name: Run Website Monitoring
+        run: bash scripts/monitor.sh
