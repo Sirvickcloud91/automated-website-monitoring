@@ -53,4 +53,4 @@ else
     echo "RESULT: All websites passed availability checks."
     exit 0
 fi
-```
+
