@@ -9,17 +9,23 @@ WEBSITES=(
 )
 
 echo "===================================="
-echo "      WEBSITE UPTIME MONITOR"
+echo " WEBSITE UPTIME MONITOR"
 echo "===================================="
-
 echo "Monitoring started at: $(date)"
 echo ""
 
 FAILED=0
+CHECKED=0
+
+if ! command -v curl >/dev/null 2>&1; then
+echo "ERROR: curl is not installed."
+exit 127
+fi
 
 for WEBSITE in "${WEBSITES[@]}"; do
 
-```
+CHECKED=$((CHECKED + 1))
+
 echo "Checking: $WEBSITE"
 
 HTTP_STATUS=$(curl -L -s -o /dev/null \
@@ -40,11 +46,16 @@ else
 fi
 
 echo "------------------------------------"
-```
 
 done
 
 echo ""
+
+if [[ "$CHECKED" -ne "${#WEBSITES[@]}" ]]; then
+echo "ERROR: Not all websites were checked."
+exit 2
+fi
+
 echo "Monitoring completed at: $(date)"
 
 if [[ "$FAILED" -eq 1 ]]; then
